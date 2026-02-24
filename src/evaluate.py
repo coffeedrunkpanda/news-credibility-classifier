@@ -30,13 +30,19 @@ def _get_metrics(
     
     Args:
         trained_model: A fitted sklearn model.
-        X: Feature matrix (DataFrame or Numpy Array).
+        X: Vectorized feature matrix (DataFrame, Series or Numpy Array).
         y: Target vector (Series or Numpy Array).
         split: Label for the data split (e.g., 'Train', 'Test').
-        comments: User notes.
+        comments: Optional user notes about the experiment run.
+        vectorizer_type: Type of vectorizer used. Must be 'tfidf' or 'bow'.
+            Defaults to 'tfidf'.
+        vectorizer_params: Optional dictionary of vectorizer hyperparameters
+            (e.g., ngram_range, max_features, max_df). Keys are added
+            dynamically as columns in the output row. Defaults to None.
 
     Returns:
-        dict: A dictionary containing all calculated metrics.
+        dict: A dictionary containing all calculated metrics, comments, and any
+            additional vectorizer parameters passed.
     """
     # Generate predictions
     y_pred = trained_model.predict(X)
@@ -74,13 +80,25 @@ def add_new_metrics(
     Args:
         metrics_df: The existing DataFrame to update.
         trained_model: A fitted sklearn model.
-        X: Feature matrix.
-        y: Target vector.
-        split: "Train" or "Test".
-        comments: Notes about this run.
+        X: Vectorized feature matrix (DataFrame, Series or Numpy Array).
+            Must be transformed using the same vectorizer used during
+            training — never pass raw text.
+        y: Target vector (Series or Numpy Array).
+        split: "train" or "test".
+            Defaults to 'train'.
+        comments: Optional user notes about the experiment run.
+            Defaults to empty string.
+        vectorizer_type: Type of vectorizer used. Must be 'tfidf' or 'bow'.
+            Defaults to 'tfidf'.
+        vectorizer_params: Optional dictionary of vectorizer hyperparameters
+            (e.g., ngram_range, max_features, max_df). Passed through to
+            _get_metrics and added as dynamic columns. Defaults to None.
+
         
     Returns:
-        pd.DataFrame: The updated DataFrame with the new row.
+        pd.DataFrame: A new DataFrame with the experiment row appended.
+            The original metrics_df is not modified in place — always
+            reassign the result: metrics_df = add_new_metrics(...).
     """
     
     # Get the metrics dictionary
