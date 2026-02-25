@@ -53,7 +53,7 @@ def _get_wordnet_pos(word):
 
 def lemmatize(text):
 
-    setup_nltk_data()
+    # setup_nltk_data()
 
     final_text = []
     wordnet_lemma = WordNetLemmatizer()
