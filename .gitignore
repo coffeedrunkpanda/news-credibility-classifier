@@ -208,4 +208,6 @@ __marimo__/
 
 
 # Repo
-/data
+*.joblib
+*.csv
+nltk_data/
