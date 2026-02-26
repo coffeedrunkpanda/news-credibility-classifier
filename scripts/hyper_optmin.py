@@ -151,32 +151,26 @@ for model_key, spec in SEARCH_SPACES.items():
 
     model_name = best_pipeline.named_steps["classifier"].__class__.__name__
 
+    vectorizer_name = best_pipeline.named_steps["vectorizer"].__class__.__name__
+
     # 6. Add the Train metrics row
     results_list.append({
         "model": model_name,
-        "split": "train",
-        "accuracy": train_acc,
-        "f1_score": train_f1,
+        "vectorizer": vectorizer_name,
+        "train_accuracy": train_acc,
+        "train_f1_score": train_f1,
+        "test_accuracy": test_acc,
+        "test_f1_score": test_f1,
         "best_parameters": str(clean_params)
     })
     
-    # 7. Add the Test metrics row
-    results_list.append({
-        "model": model_name,
-        "split": "test",
-        "accuracy": test_acc,
-        "f1_score": test_f1,
-        "best_parameters": str(clean_params)
-    })
-
-
 print("\nExperiments complete. Saving metrics...")
 
 # 8. Convert the list of dicts to a Pandas DataFrame and save it
 metrics_df = pd.DataFrame(results_list)
 
 # We use index=False so Pandas doesn't write an extra column of row numbers
-metrics_df.to_csv("outputs/best_models_evaluation_metrics.csv", index=False)
+metrics_df.to_csv("outputs/best_models_evaluation_metrics_v2.csv", index=False)
 
 # Display the final table in the console
 print(metrics_df)
