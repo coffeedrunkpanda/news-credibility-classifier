@@ -1,5 +1,7 @@
 import sys
 from pathlib import Path
+import os
+import joblib
 
 PROJECT_ROOT  = Path(__file__).resolve().parent.parent
 
@@ -115,7 +117,7 @@ for model_key, spec in SEARCH_SPACES.items():
         ("classifier", spec["classifier"]), ## placeholder
     ])
 
-    # Randomized search 
+    #1. Randomized search 
     search = RandomizedSearchCV(
         pipe,
         param_distributions=spec["param_distributions"],
@@ -164,13 +166,19 @@ for model_key, spec in SEARCH_SPACES.items():
         "best_parameters": str(clean_params)
     })
     
+    # Saving best models
+    os.makedirs("outputs/models", exist_ok=True) # Ensure the directory exists
+    model_path = f"outputs/models/{model_key}_best_pipeline.joblib"
+    joblib.dump(best_pipeline, model_path)
+    print(f"Saved best {model_key} model to {model_path}")
+
 print("\nExperiments complete. Saving metrics...")
 
 # 8. Convert the list of dicts to a Pandas DataFrame and save it
 metrics_df = pd.DataFrame(results_list)
 
 # We use index=False so Pandas doesn't write an extra column of row numbers
-metrics_df.to_csv("outputs/best_models_evaluation_metrics_v2.csv", index=False)
+metrics_df.to_csv("outputs/best_models_evaluation_metrics_v3.csv", index=False)
 
 # Display the final table in the console
 print(metrics_df)
