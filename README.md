@@ -40,13 +40,13 @@ The model was trained on a balanced dataset of news headlines:
 - **Total Samples:** 34,152 headlines.
 - **Class 0 (Fake News):** 17,572 headlines.
 - **Class 1 (Real News):** 16,580 headlines.
-- **Preprocessing:** Applied lemmatization, and character cleaning to reduce noise.
+- **Preprocessing:** Applied lemmatization, and character cleaning (Regex) to reduce noise.
 
 ## 🛠️ Technologies Used
 
 - **Core:** Python 3.12, Pandas, NumPy.
-- **Machine Learning:** Scikit-Learn (Pipelines, RandomizedSearchCV), XGBoost.
-- **NLP:** NLTK (Lemmatization), TF-IDF, Bag of Words.
+- **Machine Learning:** Scikit-Learn (Pipelines, RandomizedSearchCV), XGBoost (XGBClassifier), Naive Bayes (MultinomialNB), Random Forest (RandomForestClassifier), Logistic Regression (LogisticRegression), Support Vector Machine (LinearSVC) .
+- **NLP:** NLTK (Lemmatization), TF-IDF, Bag of Words (CountVectorizer).
 - **Visualization:** Matplotlib, Seaborn.
 
 ## 🚀 Getting Started
