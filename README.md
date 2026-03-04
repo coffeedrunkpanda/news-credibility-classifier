@@ -1,6 +1,6 @@
 # News Credibility Classifier
 
-This repository contains an NLP pipeline designed to distinguish between real and fake news headlines using various machine learning architectures.
+This repository contains an NLP pipeline designed to distinguish between real and fake news headlines using various machine learning architectures, ranging from traditional linear models to modern Transformer-based fine-tuning.
 
 - [News Credibility Classifier](#news-credibility-classifier)
   - [📖 Project Overview](#-project-overview)
@@ -19,20 +19,20 @@ The objective was to build a robust binary classifier capable of identifying "Fa
 
 ### 🏆 Key Results & Findings
 
-After extensive hyperparameter tuning using `RandomizedSearchCV`, the **Linear Support Vector Classifier (LinearSVC)** paired with **TF-IDF Vectorization** emerged as the top-performing model. While tree-based models like Random Forest achieved perfect training scores, they exhibited signs of overfitting compared to the more generalized linear models.
+While initial experiments focused on Scikit-Learn classifiers, the project was recently updated to include **Transformer-based Transfer Learning**. Fine-tuning **DistilBERT** (a distilled version of BERT) significantly outperformed traditional methods by capturing deeper semantic relationships in the headlines.
 
-| Model | Vectorizer | Test Accuracy | Test F1-Score |
+| Model | Vectorizer / Architecture | Accuracy | F1-Score / Loss |
 | :--- | :--- | :--- | :--- |
-| **LinearSVC** | TfidfVectorizer | **94.17%** | **0.9416** |
+| **DistilBERT (Fine-tuned)** | **AutoTokenizer (Transformer)** | **98.04%** | **0.0706 (Loss)** |
+| LinearSVC | TfidfVectorizer | 94.17% | 0.9416 |
 | Logistic Regression | TfidfVectorizer | 94.14% | 0.9413 |
 | XGBClassifier | TfidfVectorizer | 93.30% | 0.9328 |
 | Multinomial NB | CountVectorizer | 93.10% | 0.9308 |
-| Random Forest | TfidfVectorizer | 92.34% | 0.9233 |
 
 **Key Takeaways:**
-- **Linearity in Text:** High-dimensional text data often responds best to linear boundaries (SVC/LogReg), which outperformed complex ensembles like XGBoost in this specific task.
-- **Feature Engineering:** TF-IDF consistently yielded better generalization than simple word counts for most models.
-- **Overfitting:** The Random Forest model achieved a 1.0 training F1-score but dropped to ~0.92 on test data, suggesting it memorized noise rather than learning underlying patterns.
+- **Transformers vs. Linear Models:** The jump from 94% to 98% accuracy demonstrates the power of contextual embeddings. Unlike TF-IDF, DistilBERT understands word order and nuance [web:4].
+- **Efficiency:** Using `distilbert-base-uncased` allowed for high performance with a smaller memory footprint compared to full BERT, completing 3 epochs with an evaluation speed of ~9182 samples/sec.
+- **Modern NLP Pipeline:** The latest iteration utilizes the Hugging Face ecosystem (`Transformers` library), implementing `DataCollatorWithPadding` for efficient dynamic batching during training.
 
 ### 📊 Dataset Description
 
@@ -40,19 +40,20 @@ The model was trained on a balanced dataset of news headlines:
 - **Total Samples:** 34,152 headlines.
 - **Class 0 (Fake News):** 17,572 headlines.
 - **Class 1 (Real News):** 16,580 headlines.
-- **Preprocessing:** Applied lemmatization, and character cleaning (Regex) to reduce noise.
+- **Preprocessing:** For Transformers, we use the `AutoTokenizer` for `distilbert-base-uncased`. Traditional models used lemmatization and Regex cleaning.
 
 ## 🛠️ Technologies Used
 
+- **Deep Learning:** Hugging Face Transformers (`AutoModelForSequenceClassification`, `AutoTokenizer`), PyTorch/TensorFlow.
+- **Machine Learning:** Scikit-Learn (Pipelines, LinearSVC, LogisticRegression), XGBoost.
+- **NLP:** DistilBERT, NLTK (Lemmatization), TF-IDF.
 - **Core:** Python 3.12, Pandas, NumPy.
-- **Machine Learning:** Scikit-Learn (Pipelines, RandomizedSearchCV), XGBoost (XGBClassifier), Naive Bayes (MultinomialNB), Random Forest (RandomForestClassifier), Logistic Regression (LogisticRegression), Support Vector Machine (LinearSVC) .
-- **NLP:** NLTK (Lemmatization), TF-IDF, Bag of Words (CountVectorizer).
-- **Visualization:** Matplotlib, Seaborn.
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 - Python 3.12 or higher.
+- GPU recommended for running `notebooks/modern_nlp.ipynb`.
 
 ### Installation
 
